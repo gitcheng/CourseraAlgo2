@@ -16,7 +16,7 @@ public class Outcast {
         for (int i = 0; i < nouns.length; i++) {
             int di = 0;
             for (int j = 0; j < nouns.length; j++) {
-                di+= W.distance(nouns[i], nouns[j]);
+                di += W.distance(nouns[i], nouns[j]);
             }
             if (di > deg) {
                 deg = di;

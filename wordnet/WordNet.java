@@ -2,14 +2,13 @@
 // http://coursera.cs.princeton.edu/algs4/assignments/wordnet.html
 import java.util.Hashtable;
 import java.util.Vector;
-import java.lang.IllegalArgumentException;
 
 public class WordNet {
 
     // Mapping a noun to its id.
-    private Hashtable<String, Bag<Integer> > synsetids;
+    private Hashtable<String, Bag<Integer>> synsetids;
     // Store nouns 
-    private Vector<Bag<String> > synsetnouns;
+    private Vector<Bag<String>> synsetnouns;
     // Hypernym
     private Digraph DG;
     // Shortest ancestral path
@@ -17,17 +16,17 @@ public class WordNet {
 
     // constructor takes the name of the two input files
     public WordNet(String synsets, String hypernyms) {
-        synsetids = new Hashtable<String, Bag<Integer> >();
-        synsetnouns = new Vector<Bag<String> >();
+        synsetids = new Hashtable<String, Bag<Integer>>();
+        synsetnouns = new Vector<Bag<String>>();
 
         // read in synsets
         In in = new In(synsets);
         String s = in.readLine();
         int id = 0;
         while (s != null) {
-            String fields[] = s.split("\\,");
+            String[] fields = s.split("\\,");
             assert id == Integer.parseInt(fields[0]);
-            String words[] = fields[1].split("\\s+");
+            String[] words = fields[1].split("\\s+");
             Bag<String> nouns = new Bag<String>();
             for (int i = 0; i < words.length; i++) {
                 String w = words[i];
@@ -50,7 +49,7 @@ public class WordNet {
         in = new In(hypernyms);
         s = in.readLine();
         while (s != null) {
-            String fields[] = s.split("\\,");
+            String[] fields = s.split("\\,");
             for (int i = 0; i < fields.length; i++) {
                 int d = Integer.parseInt(fields[i]);
                 if (d > maxd) 
@@ -61,9 +60,9 @@ public class WordNet {
         }
         //StdOut.println(hns.size());
         DG = new Digraph(maxd+1);
-        for (int i= 0; i < hns.size(); i++) {
+        for (int i = 0; i < hns.size(); i++) {
             s = hns.get(i);
-            String fields[] = s.split("\\,");
+            String[] fields = s.split("\\,");
             int v = Integer.parseInt(fields[0]);
             for (int j = 1; j < fields.length; j++) {
                 DG.addEdge(v, Integer.parseInt(fields[j]));
@@ -105,8 +104,8 @@ public class WordNet {
         return S.length(synsetids.get(nounA), synsetids.get(nounB));
     }
     
-    // a synset (second field of synsets.txt) that is the common ancestor of nounA and nounB
-    // in a shortest ancestral path
+    // a synset (second field of synsets.txt) that is the common ancestor of 
+    // nounA and nounB in a shortest ancestral path
     public String sap(String nounA, String nounB) {
         if (!isNoun(nounA))
             throw new IllegalArgumentException("cannot find "+nounA);
@@ -132,8 +131,8 @@ public class WordNet {
                 StdOut.println(v + " is not a noun.");
             if (!W.isNoun(w))
                 StdOut.println(w + " is not a noun.");
-            StdOut.println("distance = " + W.distance(v,w));
-            StdOut.println("sap = " + W.sap(v,w));
+            StdOut.println("distance = " + W.distance(v, w));
+            StdOut.println("sap = " + W.sap(v, w));
         }
     }    
 }
