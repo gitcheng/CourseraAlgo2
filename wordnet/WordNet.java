@@ -112,7 +112,7 @@ public class WordNet {
         if (!isNoun(nounB))
             throw new IllegalArgumentException("cannot find "+nounB);
         int sid = S.ancestor(synsetids.get(nounA), synsetids.get(nounB));
-        String ret = new String();
+        String ret = "";
         for (String s : synsetnouns.get(sid)) {
             if (ret.length() > 0)
                 ret = ret + " ";
