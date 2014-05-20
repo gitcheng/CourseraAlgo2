@@ -184,13 +184,14 @@ public class SeamCarver {
                 pix[i][j] = pix[i][j+1];
             }
         }
+        H--;
         // update energy
         for (int i = 0; i < W; i++) {
-            energies[i][a[i]] = energy(i, a[i]);
-            if (a[i] > 0)
+            if (a[i] < H)
+                energies[i][a[i]] = energy(i, a[i]);
+            if (a[i] > 0 && a[i]-1 < H)
                 energies[i][a[i]-1] = energy(i, a[i]-1);
         }
-        H--;
     }
     
     // remove vertical   seam from current picture 
@@ -204,13 +205,14 @@ public class SeamCarver {
                 pix[i][j] = pix[i+1][j];
             }
         }
+        W--;
         // update energy
         for (int j = 0; j < H; j++) {
-            energies[a[j]][j] = energy(a[j], j);
-            if (a[j] > 0)
+            if (a[j] < W)
+                energies[a[j]][j] = energy(a[j], j);
+            if (a[j] > 0 && a[j]-1 < W)
                 energies[a[j]-1][j] = energy(a[j]-1, j);
         }
-        W--;
     }
 
     public static void main(String[] args) {
