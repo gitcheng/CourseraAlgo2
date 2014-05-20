@@ -8,7 +8,7 @@ public class WordNet {
     // Mapping a noun to its id.
     private Hashtable<String, Bag<Integer>> synsetids;
     // Store nouns 
-    private Vector<Bag<String>> synsetnouns;
+    private Vector<String> synsetnouns;
     // Hypernym
     private Digraph DG;
     // Shortest ancestral path
@@ -17,7 +17,7 @@ public class WordNet {
     // constructor takes the name of the two input files
     public WordNet(String synsets, String hypernyms) {
         synsetids = new Hashtable<String, Bag<Integer>>();
-        synsetnouns = new Vector<Bag<String>>();
+        synsetnouns = new Vector<String>();
 
         // read in synsets
         In in = new In(synsets);
@@ -27,16 +27,14 @@ public class WordNet {
             String[] fields = s.split("\\,");
             assert id == Integer.parseInt(fields[0]);
             String[] words = fields[1].split("\\s+");
-            Bag<String> nouns = new Bag<String>();
             for (int i = 0; i < words.length; i++) {
                 String w = words[i];
-                nouns.add(w);
                 if (synsetids.get(w) == null) {
                     synsetids.put(w, new Bag<Integer>());
                 }
                 synsetids.get(w).add(id);
             }
-            synsetnouns.add(nouns);
+            synsetnouns.add(fields[1]);
 
             s = in.readLine();
             id++;
@@ -112,13 +110,7 @@ public class WordNet {
         if (!isNoun(nounB))
             throw new IllegalArgumentException("cannot find "+nounB);
         int sid = S.ancestor(synsetids.get(nounA), synsetids.get(nounB));
-        String ret = "";
-        for (String s : synsetnouns.get(sid)) {
-            if (ret.length() > 0)
-                ret = ret + " ";
-            ret = ret + s;
-        }
-        return ret;
+        return synsetnouns.get(sid);
     }
     
     // for unit testing of this class
