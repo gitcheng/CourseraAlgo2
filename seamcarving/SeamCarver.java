@@ -140,7 +140,7 @@ public class SeamCarver {
     // energy of pixel at column x and row y in current picture
     public  double energy(int x, int y) {
         if (x < 0 || x >= W || y < 0 || y >= H) {
-            throw new IndexOutOfBoundsException("energy() Out of range");
+            throw new IndexOutOfBoundsException("energy() Out of range ");
         }
         if (isBorder(x, y))
             return borderEnergy;
@@ -184,13 +184,13 @@ public class SeamCarver {
                 pix[i][j] = pix[i][j+1];
             }
         }
-        H--;
         // update energy
         for (int i = 0; i < W; i++) {
             energies[i][a[i]] = energy(i, a[i]);
             if (a[i] > 0)
                 energies[i][a[i]-1] = energy(i, a[i]-1);
         }
+        H--;
     }
     
     // remove vertical   seam from current picture 
@@ -204,21 +204,19 @@ public class SeamCarver {
                 pix[i][j] = pix[i+1][j];
             }
         }
-        W--;
         // update energy
         for (int j = 0; j < H; j++) {
             energies[a[j]][j] = energy(a[j], j);
             if (a[j] > 0)
                 energies[a[j]-1][j] = energy(a[j]-1, j);
         }
+        W--;
     }
 
     public static void main(String[] args) {
 
         Picture inputImg = new Picture(args[0]);
         SeamCarver sc = new SeamCarver(inputImg);
-
-        StdOut.println(sc.width() + "  " + sc.height());
         Picture outputImg = sc.picture();
         inputImg.show();
         outputImg.show();
