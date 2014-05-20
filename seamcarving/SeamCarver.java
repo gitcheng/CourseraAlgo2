@@ -3,7 +3,7 @@ import java.awt.Color;
 
 public class SeamCarver {
 
-    private Color[][] pix;  // a 2D array to represent a picture
+    private int[][] pix;  // a 2D array to represent a picture (RGB values)
     private double[][] energies;  // energy of each pixel
 
     private final int borderEnergy;
@@ -15,12 +15,12 @@ public class SeamCarver {
         DINF = Double.POSITIVE_INFINITY;
         W = picture.width();
         H = picture.height();
-        pix = new Color[W][H];
+        pix = new int[W][H];
         energies = new double[W][H];
 
         for (int i = 0; i < W; i++) {
             for (int j = 0; j < H; j++) {
-                pix[i][j] = picture.get(i, j);
+                pix[i][j] = picture.get(i, j).getRGB();
             }
         }
 
@@ -68,9 +68,11 @@ public class SeamCarver {
 
         // copy the energy in the top row
         for (int i = 0; i < wi; i++) {
-            double e = energies[i][0];
+            double e;
             if (transpose)
                 e = energies[0][i];
+            else
+                e = energies[i][0];
             energyTo[i][0] = e;
             pixelTo[i][0] = 0;
         }
@@ -119,7 +121,7 @@ public class SeamCarver {
         Picture P = new Picture(W, H);
         for (int i = 0; i < W; i++) {
             for (int j = 0; j < H; j++) {
-                P.set(i, j, pix[i][j]);
+                P.set(i, j, new Color(pix[i][j]));
             }
         }
         return P;
@@ -143,10 +145,10 @@ public class SeamCarver {
         if (isBorder(x, y))
             return borderEnergy;
 
-        Color cxL = pix[x-1][y]; // Left
-        Color cxR = pix[x+1][y]; // Right
-        Color cyB = pix[x][y-1]; // Bottom
-        Color cyT = pix[x][y+1]; // Top
+        Color cxL = new Color(pix[x-1][y]); // Left
+        Color cxR = new Color(pix[x+1][y]); // Right
+        Color cyB = new Color(pix[x][y-1]); // Bottom
+        Color cyT = new Color(pix[x][y+1]); // Top
 
         return grad1D(cxL, cxR) + grad1D(cyB, cyT);
     }
