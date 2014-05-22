@@ -87,8 +87,10 @@ public class BaseballElimination {
         checkteam(team);
         int ti = teamid.get(team);
         for (int i = 0; i < N; i++) {
-            if (W[ti] + R[ti] < W[i])
+            if (W[ti] + R[ti] < W[i]) {
+                cert[ti][i] = true;  // only record the first one
                 return true;
+            }
         }
         return false;
     }
@@ -172,15 +174,17 @@ public class BaseballElimination {
     // subset R of teams that eliminates given team; null if not eliminated
     public Iterable<String> certificateOfElimination(String team) {
         checkteam(team);
-        Bag<String> CE = new Bag<String>();
-        boolean ie = isEliminated(team);
-        int ti = teamid.get(team);
-        for (int i = 0; i < N; i++) {
-            if (cert[ti][i]) {
-                CE.add(T[i]);
+        if (isEliminated(team)) {
+            Bag<String> CE = new Bag<String>();
+            int ti = teamid.get(team);
+            for (int i = 0; i < N; i++) {
+                if (cert[ti][i]) {
+                    CE.add(T[i]);
+                }
             }
+            return CE;
         }
-        return CE;
+        return null;
     }
 
     // print record table
