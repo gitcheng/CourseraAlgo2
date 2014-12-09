@@ -3,3 +3,8 @@
 *.log
 *.zip
 #*
+wordnet/wordnet
+baseball/baseball
+seamcarving/seamCarving
+bogglesolver/boggle
+bogglesolver/temp
