@@ -73,21 +73,26 @@ public class TrieSET26 implements Iterable<String> {
         return x.isString;
     }
 
-    /** 
-     * Is the given key a prefix of any word in the set?
-     */
-    public boolean isPrefix(String key) {
-        Node x = get(root, key, 0);
-        if (x == null) return false;
-        return true;
-    }
-
-
     private Node get(Node x, String key, int d) {
         if (x == null) return null;
         if (d == key.length()) return x;
         char c = charAt(key, d);
         return get(x.next[c], key, d+1);
+    }
+
+    /** 
+     * Is the given key a prefix of any word in the set?
+     */
+    public boolean isPrefix(String key) {
+	int d = 0;
+	char c = charAt(key, d++);
+	Node x = root.next[c];
+	while (x != null && d < key.length()) {
+	    c = charAt(key, d++);
+	    x = x.next[c];
+	}
+	if (x == null) return false;
+	return true;
     }
 
     /**

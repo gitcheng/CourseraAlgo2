@@ -77,6 +77,7 @@ public class BoggleSolver
 	marked = new boolean[M*N];
 	isQ = new boolean[M*N];
         pathstring = new StringBuilder("");
+
         // All valid words starting at position s.
         Stack<String> words = new Stack<String>();
         dfsPaths(board, s, words);
