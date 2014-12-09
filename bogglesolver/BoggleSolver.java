@@ -11,7 +11,10 @@ public class BoggleSolver
     private TrieSET26 dictset;  // dictionary data type
 
     private boolean[] marked;
+    private boolean[] isQ;
     private int M, N;
+    private Bag<Integer>[] adj;  // adjacent lists for board paths
+    
     private TreeSet<String> validWords;
     private StringBuilder pathstring;
 
@@ -24,6 +27,8 @@ public class BoggleSolver
         for (String word : dictionary) {
             dictset.add(word);
         }
+	M = 0;
+	N = 0;
     }
 
 
@@ -37,33 +42,31 @@ public class BoggleSolver
         // append the letter to a string
         char vc = board.getLetter(vi, vj);
         pathstring.append(vc);
-        if (vc == 'Q') pathstring.append('U');
+        if (vc == 'Q') {
+	    pathstring.append('U');
+	    isQ[v] = true;
+	}
 
         String word = pathstring.toString();
         if (!dictset.isPrefix(word)) return;
 
-        if (word.length() >= 3) {
-            if (dictset.contains(word))
-                words.push(word);
-        }
+        if (word.length() >= 3 && dictset.contains(word))
+	    words.push(word);
 
         // Expand the path: going to the neighbors
-        for (int i = Math.max(0, vi-1); i < Math.min(vi+2, M); i++) {
-            for (int j = Math.max(0, vj-1); j < Math.min(vj+2, N); j++) {
-                int w = i*N + j;
-                if (!marked[w]) {
-                    dfsPaths(board, w, words);
-                } else {
-                    continue;
-                }
-                // back track, set the marker to false so the next path can find
-                // it.
-                marked[w] = false;
-                pathstring.deleteCharAt(pathstring.length()-1);
-                // If after deletion, the new last letter is Q, delete that.
-                if (pathstring.charAt(pathstring.length()-1) == 'Q')
-                    pathstring.deleteCharAt(pathstring.length()-1);
-            }
+	for (int w : adj[v]) {
+	    if (!marked[w]) {
+		dfsPaths(board, w, words);
+	    } else {
+		continue;
+	    }
+	    // back track, set the marker to false so the next path can find
+	    // it.
+	    marked[w] = false;
+	    pathstring.deleteCharAt(pathstring.length()-1);
+	    // If after deletion, the new last letter is Q, delete that.
+	    if (isQ[w])
+		pathstring.deleteCharAt(pathstring.length()-1);
         }
     }
 
@@ -71,9 +74,8 @@ public class BoggleSolver
     // Return all valid words on the board starting from position s
     private Iterable<String> getAllValidWords(BoggleBoard board, int s) {
         // Create an array to mark board
-        M = board.rows();
-        N = board.cols();
-        marked = new boolean[M*N];
+	marked = new boolean[M*N];
+	isQ = new boolean[M*N];
         pathstring = new StringBuilder("");
         // All valid words starting at position s.
         Stack<String> words = new Stack<String>();
@@ -84,16 +86,27 @@ public class BoggleSolver
     // Returns the set of all valid words in the given Boggle board, as an 
     // Iterable.
     public Iterable<String> getAllValidWords(BoggleBoard board) {
+	if (M != board.rows() || N != board.cols()) {
+	    // Rebuild adjacent lists
+	    M = board.rows();
+	    N = board.cols();
+	    // Initialize adjacent lists
+	    adj = (Bag<Integer>[]) new Bag[M*N];
+	    for (int v = 0; v < M*N; v++) {
+		adj[v] = new Bag<Integer>();
+		int vj = v % N;
+		int vi = (v-vj)/N;
+		// Expand the path: going to the neighbors
+		for (int i = Math.max(0, vi-1); i < Math.min(vi+2, M); i++)
+		    for (int j = Math.max(0, vj-1); j < Math.min(vj+2, N); j++)
+			adj[v].add(i*N + j);
+	    }
+	}
 
         validWords = new TreeSet<String>();
-        for (int v = 0; v < board.rows()*board.cols(); v++) {
-            for (String word : getAllValidWords(board, v)) {
-                if (word.length() < 3) continue;
-                if (dictset.contains(word)) {
-                    validWords.add(word);
-                }
-            }
-        }
+        for (int v = 0; v < board.rows()*board.cols(); v++)
+            for (String word : getAllValidWords(board, v))
+		validWords.add(word);
         return validWords;
     }
         
