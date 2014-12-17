@@ -5,7 +5,7 @@ http://coursera.cs.princeton.edu/algs4/assignments/burrows.html
 public class CircularSuffixArray {
 
     private final int R = 256;
-    private final int CUTOFF = 10;
+    private final int CUTOFF = 15;
     private Integer[] index; // index of the 1st char of sorted suffixes
     private String s0;
     private int N;
@@ -51,7 +51,7 @@ public class CircularSuffixArray {
     private void insertionsort(Integer[] a, int lo, int hi, int d)
     {
 	for (int i = lo; i <= hi; i++)
-	    for (int j = i; j > lo && less(a[j], a[j-1], d); j--)
+	    for (int j = i; j > lo && less(a[j], a[j-1], d, hi-lo+1); j--)
 		exch(a, j, j-1);
     }
 
@@ -62,14 +62,17 @@ public class CircularSuffixArray {
 	a[j] = x;
     }
 
-    private boolean less(int i, int j, int d)
+    private boolean less(int i, int j, int d, int M)
     {
-	return csuffix((i+d)%N).compareTo(csuffix((j+d)%N)) < 0;
+	return csuffix((i+d)%N, M).compareTo(csuffix((j+d)%N, M)) < 0;
     }
 
-    private String csuffix(int i)
+    private String csuffix(int i, int M)
     {
-	return s0.substring(i, N) + s0.substring(0, i);
+	if (i+M <= N)
+	    return s0.substring(i, i+M);
+	else
+	    return s0.substring(i, N) + s0.substring(0, i+M-N);
     }
 
 
