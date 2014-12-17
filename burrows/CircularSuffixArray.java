@@ -101,11 +101,14 @@ public class CircularSuffixArray {
     // unit testing of the methods (optional)
     public static void main(String[] args)
     {
-	CircularSuffixArray csa = new CircularSuffixArray(args[0]);
+	In in = new In(args[0]);
+	String s = in.readString();
+
+	CircularSuffixArray csa = new CircularSuffixArray(s);
 	StdOut.println(csa.length());
-	for (int i = 0; i < csa.length(); i++) 
-	    StdOut.print(csa.index(i) + " ");
-	StdOut.println();
+	// for (int i = 0; i < csa.length(); i++) 
+	//     StdOut.print(csa.index(i) + " ");
+	// StdOut.println();
 
 	// csa.printSuffixes();
 	// StdOut.println();
