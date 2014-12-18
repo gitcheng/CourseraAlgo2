@@ -5,7 +5,7 @@ http://coursera.cs.princeton.edu/algs4/assignments/burrows.html
 
 public class BurrowsWheeler {
 
-
+    private static final int R = 256;
 
 
     // apply Burrows-Wheeler encoding, reading from standard input and writing to standard output
@@ -44,24 +44,29 @@ public class BurrowsWheeler {
     {
 	int first = BinaryStdIn.readInt();
 	char[] t = new char[1];
+	int[] count = new int[R+1];  // key-index count 
 	int N = 0;
 	while (!BinaryStdIn.isEmpty()) {
 	    char c = BinaryStdIn.readChar();
 	    if (N == t.length) t = resize(t);
 	    t[N++] = c;
+	    count[(int) c + 1]++;
 	}
+	// cumulative counts (starting position of each character in sorted order)
+	for (int r = 0; r < R; r++)
+	    count[r+1] += count[r];
+
 	int[] next = new int[N];
-	for (int i = 0; i < N; i++) next[i] = i;
-	// sort t array, exchange next array elements accordingly
+	char[] sortedT = new char[N];
+	// Iterate over t. Find the position of t[i] in the sortedT, which is 
+	// count[t[i]]++. Then assign i to next[count[t[i]++]
 	for (int i = 0; i < N; i++) {
-	    for (int j = i; j > 0 && t[j] < t[j-1]; j--) {
-		char c = t[j];  t[j] = t[j-1];  t[j-1] = c;
-		int n = next[j]; next[j] = next[j-1]; next[j-1] = n;
-	    }
+	    sortedT[count[t[i]]] = t[i];
+	    next[count[t[i]]++] = i;
 	}
 	int k = first;
 	for (int i = 0; i < N; i++) {
-	    BinaryStdOut.write(t[k], 8);
+	    BinaryStdOut.write(sortedT[k], 8);
 	    k = next[k];
 	}
 	BinaryStdOut.close();
@@ -70,7 +75,8 @@ public class BurrowsWheeler {
     private static char[] resize(char[] t)
     {
 	char[] temp = new char[t.length * 2];
-	for (int i = 0; i < t.length; i++) temp[i] = t[i];
+	for (int i = 0; i < t.length; i++)
+	    temp[i] = t[i];
 	return temp;
     }
 

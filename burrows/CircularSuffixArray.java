@@ -20,13 +20,13 @@ public class CircularSuffixArray {
 	    index[i] = i;
 
 	//int[] aux = new int[N];
-	//MSDsort(index, aux, 0, N-1, 0);
-	Quick3string(index, 0, N-1, 0);
+	//msdsort(index, aux, 0, N-1, 0);
+	quick3string(index, 0, N-1, 0);
     }
 
 
-    // Quick3string three-way string quick sort
-    private void Quick3string(int[] a, int lo, int hi, int d)
+    // quick3string three-way string quick sort
+    private void quick3string(int[] a, int lo, int hi, int d)
     {
 	if (hi <= lo) return;
 	if (d >= N) return;
@@ -47,9 +47,9 @@ public class CircularSuffixArray {
 	    else if (t > v) exch(a, i, gt--);
 	    else i++;
 	}
-	Quick3string(a, lo, lt-1, d);
-	if (v >= 0) Quick3string(a, lt, gt, d+1);
-	Quick3string(a, gt+1, hi, d);
+	quick3string(a, lo, lt-1, d);
+	if (v >= 0) quick3string(a, lt, gt, d+1);
+	quick3string(a, gt+1, hi, d);
     }
 
 
@@ -57,7 +57,7 @@ public class CircularSuffixArray {
 
     // MSD string sort using key-indexed counting. Integer array represents
     // the starting index of suffixes.
-    private void MSDsort(int[] a, int[] aux, int lo, int hi, int d)
+    private void msdsort(int[] a, int[] aux, int lo, int hi, int d)
     {
 	if (hi <= lo) return;
 	if (hi - lo < CUTOFF) {
@@ -76,7 +76,7 @@ public class CircularSuffixArray {
 	    a[i] = aux[i - lo];
 	// sort R subarrays recursively
 	for (int r = 0; r < R; r++)
-	    MSDsort(a, aux, lo + count[r], lo + count[r+1] - 1, d+1);
+	    msdsort(a, aux, lo + count[r], lo + count[r+1] - 1, d+1);
     }
 
     private void insertionsort(int[] a, int lo, int hi, int d)

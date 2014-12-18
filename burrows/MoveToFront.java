@@ -4,7 +4,7 @@ http://coursera.cs.princeton.edu/algs4/assignments/burrows.html
 */
 
 public class MoveToFront {
-    private static int R = 256;
+    private static final int R = 256;
     private static char[] achars;
 
 
