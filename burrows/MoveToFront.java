@@ -52,11 +52,11 @@ public class MoveToFront {
 	    a[i++] = ac;
 	    ac = ac2;
 	}
-	if (i >= a.length)
+	if (i > a.length)
 	    throw new IllegalArgumentException("Contains illegal characters");
 	// move to front
 	a[0] = c;
-	return (char)(i-1);
+	return (char) (i-1);
     }
 
 
